@@ -23,7 +23,7 @@ module ActionController
     end
     
     class Route
-      REQUEST_CONDITIONS = %w{subdomain domain method port remote_ip content_type accepts request_uri protocol}.map &:to_sym
+      REQUEST_CONDITIONS = %w{subdomain domain domain_2 method port remote_ip content_type accepts request_uri protocol}.map &:to_sym
       
       def initialize(path, options = {})
         @path, @options = path, options
@@ -64,11 +64,18 @@ module ActionController
         end
         
         conds = @request_conditions.collect do |key, value|
-          if value.is_a? Regexp
-            "@request.#{ (key == :subdomain) ? "subdomains.first" : key.to_s }.to_s =~ #{value.inspect}"
-          else
-            "@request.#{ (key == :subdomain) ? "subdomains.first" : key.to_s } == #{value.inspect}"
-          end
+          comp = value.is_a?(Regexp) ? "=~" : "=="
+
+          expr  = "@request."
+          expr += case key
+                    when :subdomain
+                      "subdomains.first"
+                    when :domain_2
+                      "domain(2)"
+                    else
+                      key.to_s
+                  end
+          expr += ".to_s #{comp} #{value.inspect}"
         end
         
         if !conds.empty?

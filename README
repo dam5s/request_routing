@@ -10,9 +10,11 @@ port.  You can test them either against a value or with a Regexp
 *UPDATE* Now works with the new routing code as implemented in edge rails.  Note the
 change in API: use :conditions instead of :requirements.
 
+*UPDATE* Now you can use for domain names with 2 tld!
+
 == Installation
 
-    ruby script/plugin install http://svn.vivabit.net/external/rubylibs/request_routing/
+    script/plugin install git://github.com/dam5s/request_routing.git
 
 == Usage
 
@@ -27,7 +29,8 @@ You can also, of course, use the conditions hash in map.with_options calls.
 The allowed properties are:
 
 		:subdomain  (only checks the first subdomain)
-		:domain (only accurate for single tld domain names at the moment)
+		:domain (only accurate for single tld domain names)
+		:domain_2 (use for 2 tld domain names)
 		:method (a symbol)
 		:port (a number)
 		:remote_ip 
